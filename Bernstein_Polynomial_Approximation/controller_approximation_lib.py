@@ -13,6 +13,7 @@ import os
 import warnings
 import sinkhorn_pointcloud as spc
 warnings.filterwarnings("ignore")
+import sys
 
 
 def get_param():
@@ -244,11 +245,13 @@ if __name__ == '__main__':
 
     # param = np.load('param.npy')
     param_history = []
+
+    flag = int(sys.argv[2])
     # gradient descent
     goal_w = []
     safe_w = []
-    time = []
-    for i in range(2):
+    mytime = []
+    for i in range(150):
         print('')
         print('')
         print('here begins the ' + str(i) + 'th updates:')
@@ -267,12 +270,12 @@ if __name__ == '__main__':
             safe_gra = np.clip(safe_gra, -1.5, 1.5)
             param +=  safe_gra
 
-        time.append(time.time() - time_iter)
+        mytime.append(time.time() - time_iter)
 
         if goal_inter and not safe_inter:
             np.save('goal_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(goal_w))
             np.save('safe_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(safe_w))
-            np.save('time_0.npy', np.array(time))
+            np.save('time_'+str(flag)+'.npy', np.array(mytime))
             print('The running time is: ', time.time() - now)
             break
 
@@ -280,7 +283,7 @@ if __name__ == '__main__':
             np.save('goal_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(goal_w))
             np.save('safe_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(safe_w))
             print('The running time is: ', time.time() - now)
-            np.save('time_0.npy', np.array(time))
+            np.save('time_'+str(flag)+'.npy', np.array(mytime))
             break
 
 

@@ -104,11 +104,11 @@ def metric(reachset, targetset, printC = False):
 
 def gradient(cmd, state, theta, goalset, step, measure, goal_run=True):
     gradient = []
-    x = subprocess.run([cmd, str(state[0]), str(state[1]), str(theta[0]), str(theta[1]), str(85)], 
-        stdout=subprocess.PIPE).stdout.decode('utf-8')
-    x = x.split("\n")
-    print(x)
-    x = [float(x[i]) for i in range(len(x)-1)]
+    # x = subprocess.run([cmd, str(state[0]), str(state[1]), str(theta[0]), str(theta[1]), str(85)], 
+    #     stdout=subprocess.PIPE).stdout.decode('utf-8')
+    # x = x.split("\n")
+    # print(x)
+    # x = [float(x[i]) for i in range(len(x)-1)]
     # reachset0 = set(x)
     # measure(reachset0, goalset)
     
@@ -138,10 +138,10 @@ def gradient(cmd, state, theta, goalset, step, measure, goal_run=True):
     reachset4 = set(x)
 
     if goal_run:
-        x = subprocess.run([cmd, str(state[0]), str(state[1]), str(theta[0]), str(theta[1]), str(step+50)], 
+        x = subprocess.run([cmd, str(state[0]), str(state[1]), str(theta[0]), str(theta[1]), str(75)], 
         stdout=subprocess.PIPE).stdout.decode('utf-8')
     else:
-        x = subprocess.run([cmd, str(state[0]), str(state[1]), str(theta[0]), str(theta[1]), str(step)], 
+        x = subprocess.run([cmd, str(state[0]), str(state[1]), str(theta[0]), str(theta[1]), str(5)], 
         stdout=subprocess.PIPE).stdout.decode('utf-8')        
     x = x.split("\n")
     x = [float(x[i]) for i in range(len(x)-1)]
@@ -182,10 +182,10 @@ def run_heuristic():
     for i in range(1):
         state = env.reset()
         # theta = np.random.uniform(low=0, high=1, size=(state.size))
-        # theta = np.array([0.5, -0.5])
+        theta = np.array([0.5, -0.5])
         # theta = np.array([0.65948292, -2.37738382])
         # theta = np.array([0.62166829, -2.10912446])
-        theta = np.array([0.78902362, -3.08507751])
+        # theta = np.array([0.78902362, -3.08507751])
         better_theta = theta
         goal_dis = []
         safe_dis = []
@@ -204,7 +204,8 @@ def run_heuristic():
 
             if criterion < 0 and safe_distace > 0:
                 np.save('goal_acc.npy', np.array(goal_dis))
-                np.save('sage_acc.npy', np.array(safe_dis))
+                np.save('safe_acc.npy', np.array(safe_dis))
+                break
             # print(criterion, safe_distace)
 
             # assert False
@@ -212,7 +213,7 @@ def run_heuristic():
                 better_theta = theta 
                 indi = criterion
 
-            print('goal_gra:' , goal_gra)
+            # print('goal_gra:' , goal_gra)
             
             if not disturbance:
                 next_theta = theta - lr * goal_gra[:2] + 1e-4 * safe_gra[:2]
@@ -222,8 +223,8 @@ def run_heuristic():
                     next_theta -= lr/5000 * goal_gra[2:]
 
             theta = next_theta
-            if t % 20 == 0:
-                np.save('acc_theta_his_29.npy', np.array(theta_list))
+            # if t % 20 == 0:
+            #     np.save('acc_theta_his_29.npy', np.array(theta_list))
         print(better_theta)
 
 def run_W():
@@ -283,8 +284,8 @@ def run_W():
 
 if __name__ == '__main__':
     # heuristic
-    # run_heuristic()
+    run_heuristic()
 
     # W_distance
-    run_W()
+    # run_W()
 

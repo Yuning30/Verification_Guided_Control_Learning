@@ -161,6 +161,7 @@ def metric(reachset, targetset):
         return min_dist
 
 def gradient(cmd, parameter, goalset, step, measure,unsafecase=False):
+    unsafe_set = set([-0.3, 0.2, -0.25, 0.35])
     gradient = []
     if unsafecase:
         # OS
@@ -187,6 +188,8 @@ def gradient(cmd, parameter, goalset, step, measure,unsafecase=False):
     reachset1 = set(x)
     m1 = measure(reachset1, goalset)
 
+    m_unsafe = measure(reachset1, unsafe_set)
+
     # os.system('./nn_os_relu_tanh 1')
 
     np.save('param.npy', parameter-pert)
@@ -205,61 +208,74 @@ def gradient(cmd, parameter, goalset, step, measure,unsafecase=False):
     # gradient[index] -= 0.0005*(reachset1.area-reachset2.area)/delta[index]
     
     assert index in [4,5,7,8,10,11]
-    return gradient, m1, m2, intersect(reachset1, goalset)
+    return gradient, m1, m2, intersect(reachset1, goalset), intersect(reachset2, goalset), m_unsafe
 
 if __name__ == '__main__':
+
+    now = time.time()
+
 
 #Oscillator    
     ### heuristic metrics based ###
     # # initilize the controller parameters
     # param = get_param()
+    # # param = np.load('param.npy')
+    # param_history = []
+    # # gradient descent 
+    # for i in range(500):
+    #     print('here begins the ' + str(i) + 'th updates:')
+    #     param_history.append(param)
+    #     # goal_only 
+    #     gra, _, g1, intergoal = gradient('./nn_os_relu_tanh', param, set([-0.05, -0.05, 0.05, 0.05]), 15, measure=metric)
 
-    param = np.load('param.npy')
-    param_history = []
-    # gradient descent 
-    for i in range(500):
-        print('here begins the ' + str(i) + 'th updates:')
-        param_history.append(param)
-        # goal_only 
-        gra, _, _, _ = gradient('./nn_os_relu_tanh', param, set([-0.05, -0.05, 0.05, 0.05]), 20, measure=metric)
+    #     param -= gra
+    #     # if i > 60:
+    # # also consider the unsafe set
+    #     safe, _, s1, intersafe = gradient('./nn_os_relu_tanh', param, set([-0.3, 0.2, -0.25, 0.35]), 6, measure=metric,unsafecase=True)
+    #     # print(safe)
 
-        param -= gra
-        # if i > 60:
-    # also consider the unsafe set
-        # safe, _, _, _ = gradient('./nn_os_relu_tanh', param, set([-0.3, 0.2, -0.25, 0.35]), 6, measure=metric,unsafecase=True)
-        # print(safe)
-
-        # param +=  5 * safe
-
-        # np.save('param_history.npy', np.array(param_history))
+    #     param +=  0.05 * safe
+    #     if intergoal and not intersafe:
+    #         break
 
     ### Wasserstain Distance
     # # initilize the controller parameters
-    # param = get_param()
+    param = get_param()
 
-    # # param = np.load('param.npy')
-    # param_history = []
-    # # gradient descent
-    # goal_w = []
-    # safe_w = []
-    # for i in range(80):
-    #     print('')
-    #     print('')
-    #     print('here begins the ' + str(i) + 'th updates:')
-    #     # param_history.append(param)
-    #     # goal_only 
-    #     goal_gra, goal1, goal2, _ = gradient('./nn_os_relu_tanh', param, set([-0.05, -0.05, 0.05, 0.05]), 15, measure=W_distance)
-    #     goal_w.append((goal1+goal2)/2)
-    #     print(goal_gra)
-    #     goal_gra = np.clip(goal_gra, -1.5, 1.5)
-    #     param -= goal_gra
+    # param = np.load('param.npy')
+    param_history = []
+    # gradient descent
+    goal_w = []
+    safe_w = []
+    for i in range(2):
+        print('')
+        print('')
+        print('here begins the ' + str(i) + 'th updates:')
+        # param_history.append(param)
+        # goal_only 
+        goal_gra, goal1, goal2, goal_inter, goal_inter_pri, safe1 = gradient('./nn_os_relu_tanh', param, set([-0.05, -0.05, 0.05, 0.05]), 15, measure=W_distance)
+        goal_w.append((goal1+goal2)/2)
+        # print(goal_gra)
+        goal_gra = np.clip(goal_gra, -1.5, 1.5)
+        param -= goal_gra
 
-    #     # safe_gra, safe1, safe2, _ = gradient('./nn_os_relu_tanh', param, set([-0.3, 0.2, -0.25, 0.35]), 6, unsafecase=True, measure=W_distance)
-    #     # safe_w.append((safe1+safe2)/2)
-    #     # param +=  safe_gra
+        safe_gra, _, _, safe_inter, safe_inter_pri,  _= gradient('./nn_os_relu_tanh', param, set([-0.3, 0.2, -0.25, 0.35]), 6, unsafecase=True, measure=W_distance)
+        safe_w.append(safe1)
+        if goal_inter:
+            safe_gra = np.clip(safe_gra, -1.5, 1.5)
+            param +=  safe_gra
 
-    #     np.save('goal_w.npy', np.array(goal_w))
-        # np.save('safe_w.npy', np.array(safe_w))
+        if goal_inter and not safe_inter:
+            np.save('goal_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(goal_w))
+            np.save('safe_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(safe_w))
+            print('The running time is: ', time.time() - now)
+            break
+
+        if goal_inter_pri and not safe_inter_pri:
+            np.save('goal_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(goal_w))
+            np.save('safe_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(safe_w))
+            print('The running time is: ', time.time() - now)
+            break
 
 
 

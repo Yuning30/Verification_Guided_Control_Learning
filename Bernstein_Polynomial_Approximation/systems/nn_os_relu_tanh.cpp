@@ -67,8 +67,8 @@ int main(int argc, char* argv[])
 	float state_1 = -0.5;
 	float state_2 = 0.5; 
 
-	// Interval init_x0(state_1-0.01, state_1+0.01), init_x1(state_2 - 0.01, state_2 + 0.01), init_u(0);
-	Interval init_x0(-0.502, -0.49), init_x1(0.49, 0.51), init_u(0);
+	Interval init_x0(state_1-0.01, state_1+0.01), init_x1(state_2 - 0.01, state_2 + 0.01), init_u(0);
+	// Interval init_x0(-0.502, -0.49), init_x1(0.49, 0.51), init_u(0);
 
 	std::vector<Interval> X0;
 	X0.push_back(init_x0);
@@ -100,8 +100,8 @@ int main(int argc, char* argv[])
 	time(&start_timer);
 
 	// // perform 35 control steps
-	// int step_num = std::stoi(argv[1]);
-	for (int iter = 0; iter < 10; ++iter)
+	int step_num = std::stoi(argv[1]);
+	for (int iter = 0; iter < step_num; ++iter)
 	{
 		vector<Interval> box;
 		initial_set.intEval(box, order, setting.tm_setting.cutoff_threshold);

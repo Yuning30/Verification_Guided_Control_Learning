@@ -43,10 +43,12 @@ int main(int argc, char* argv[])
 	setting.setTime(0.1);
 
 	// cutoff threshold
-	setting.setCutoffThreshold(1e-10);
+	// setting.setCutoffThreshold(1e-10);
+	setting.setCutoffThreshold(1e-7);
 
 	// queue size for the symbolic remainder
-	setting.setQueueSize(1000);
+	// setting.setQueueSize(1000);
+	setting.setQueueSize(300);
 
 	// print out the steps
 	setting.printOn();
@@ -89,7 +91,7 @@ int main(int argc, char* argv[])
 	char const *function_name1 = "poly_approx_controller";
 	char const *function_name2 = "poly_approx_error";
 	char const *function_name3 = "network_lips";
-	char const *degree_bound = "[2, 2]";
+	char const *degree_bound = "[1, 1]";
 	char const *activation = "ReLU_tanh";
 	char const *output_index = "0";
 	char const *neural_network = "os_W";

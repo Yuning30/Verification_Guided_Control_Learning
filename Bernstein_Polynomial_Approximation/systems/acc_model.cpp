@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	
 	Expression_AST<Real> deriv_x0("40-x1");  // theta_r = 0
 
-	Expression_AST<Real> deriv_x1("-0.2*x1 + u - 12.3");
+	Expression_AST<Real> deriv_x1("-0.2*x1 + u");
 	// Expression_AST<Real> deriv_x1("u");
 
 	Expression_AST<Real> deriv_u("0");

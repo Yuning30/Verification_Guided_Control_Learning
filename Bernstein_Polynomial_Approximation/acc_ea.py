@@ -81,7 +81,7 @@ def metric(reachset, targetset, printC = False):
         assert overlapY >= 0
         area = overlapX*overlapY
         if printC:
-        	print("Ohoo, intersected and the area is: ", area)
+            print("Ohoo, intersected and the area is: ", area)
         inter = True
         return -area, inter
     else:
@@ -99,7 +99,7 @@ def metric(reachset, targetset, printC = False):
             delta_y = Dy - (r_height+g_height) / 2
             min_dist = np.sqrt(delta_x**2+delta_y**2)
         if printC:
-        	print("Not intersect and min distance is: ", min_dist)
+            print("Not intersect and min distance is: ", min_dist)
         return min_dist, inter
 
 def gradient(cmd, state, theta, goalset, step, measure, goal_run=True):
@@ -288,4 +288,3 @@ if __name__ == '__main__':
 
     # W_distance
     # run_W()
-

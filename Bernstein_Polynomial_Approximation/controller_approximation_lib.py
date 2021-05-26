@@ -272,6 +272,9 @@ if __name__ == '__main__':
 
         mytime.append(time.time() - time_iter)
 
+        if i == 149:
+            np.save('time_'+str(flag)+'.npy', np.array(mytime))
+            
         if goal_inter and not safe_inter:
             np.save('goal_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(goal_w))
             np.save('safe_w_'+str(i)+'_'+str(int(time.time() - now))+'.npy', np.array(safe_w))

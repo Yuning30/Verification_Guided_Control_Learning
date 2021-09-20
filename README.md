@@ -4,6 +4,7 @@ This repository contains the main implementation of "Verification in the Loop: C
 
 ## Installation
 Please refer to [ReachNN](https://github.com/JmfanBU/ReachNNStar) to set up the environment. 
+Addtionally, you need to set up [cnpy](https://github.com/rogersce/cnpy), which is a C++ library save vector into numpy array.
 
 ## Usage
 
@@ -19,10 +20,15 @@ make name=nn_os_relu_tanh
 python controller_approximation_lib.py -flag 1
 ```
 
-Please consider to use run.py to automically run multiple times for the experiments.
+To run the controller synthesis for the 3-dimensional numerical example, please do
+```shell
+cd Bernstein_Polynomial_Approximation
+make name=nn_3d_relu_tanh
+python controller_approximation_lib_3dsys
+```
 
 ## Contributing 
 Please open an issue if there is any problem you encounter with.
 
 ## To do
-Add more systems into the experiments.
+Organize the code.

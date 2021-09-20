@@ -35,6 +35,8 @@ class NN(object):
             self.num_of_inputs = int(res[0])
             self.num_of_outputs = int(res[1])
             self.num_of_hidden_layers = int(res[2])
+            # print(self.num_of_inputs, self.num_of_outputs, self.num_of_hidden_layers)
+            # assert False
             self.network_structure = np.zeros(self.num_of_hidden_layers + 1,
                                               dtype=int)
 

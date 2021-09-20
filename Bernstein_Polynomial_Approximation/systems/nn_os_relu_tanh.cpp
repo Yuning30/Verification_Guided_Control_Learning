@@ -43,12 +43,12 @@ int main(int argc, char* argv[])
 	setting.setTime(0.1);
 
 	// cutoff threshold
-	// setting.setCutoffThreshold(1e-10);
-	setting.setCutoffThreshold(1e-7);
+	setting.setCutoffThreshold(1e-10);
+	// setting.setCutoffThreshold(1e-7);
 
 	// queue size for the symbolic remainder
-	// setting.setQueueSize(1000);
-	setting.setQueueSize(300);
+	setting.setQueueSize(1000);
+	// setting.setQueueSize(300);
 
 	// print out the steps
 	setting.printOn();

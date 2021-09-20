@@ -18,6 +18,7 @@ from itertools import product
 from accenv import ACC
 from layers import SinkhornDistance
 import torch
+import time
 
 
 class set:
@@ -190,6 +191,7 @@ def run_heuristic():
         goal_dis = []
         safe_dis = []
         for t in range(200):
+            current = time.time()
             print('') 
             print(t, theta, better_theta, indi)
             if t >= 100:
@@ -225,6 +227,7 @@ def run_heuristic():
             theta = next_theta
             # if t % 20 == 0:
             #     np.save('acc_theta_his_29.npy', np.array(theta_list))
+            print('time: ', time.time()-current)
         print(better_theta)
 
 def run_W():
@@ -251,6 +254,7 @@ def run_W():
         goal_dis = []
         safe_dis = []
         for t in range(200):
+            current = time.time()
             print('') 
             print(t, theta, better_theta, indi)
             if t >= 100:
@@ -280,6 +284,7 @@ def run_W():
             next_theta = theta - lr * goal_gra[:2] + 1e-5 * safe_gra[:2]
 
             theta = next_theta
+            print('time: ', time.time()-current)
         print(better_theta)
 
 if __name__ == '__main__':

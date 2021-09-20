@@ -45,6 +45,7 @@ def nn_poly_approx_bernstein(
             d_j = degree_bound[j]
             # linear transformation to normalize the box to I=[0,1]^m
             # lower bound of the j-th component
+            # print(input_dim, j, input_box, len(input_box))
             alpha_j = np.float64(input_box[j][0])
             # upper bound of the j-th component
             beta_j = np.float64(input_box[j][1])
@@ -247,9 +248,9 @@ def bernstein_error_partition_cuda(
     with U.make_session() as sess:
         sess.run(tf.global_variables_initializer())
         batch_pointer = 0
-        print(
-            'number of sampling points: {}'.format(all_sample_points.shape[0])
-        )
+        # print(
+        #     'number of sampling points: {}'.format(all_sample_points.shape[0])
+        # )
         for sample_points, shift_points in zip(
             all_sample_points_batches,
             all_shift_points_batches
@@ -258,7 +259,7 @@ def bernstein_error_partition_cuda(
                 batch_pointer,
                 batch_pointer + sample_points.shape[0]
             )
-            print('batch_range: {}'.format(batch_range))
+            # print('batch_range: {}'.format(batch_range))
             poly_results[batch_range, :] = poly(
                 sess,
                 shift_points
@@ -271,7 +272,7 @@ def bernstein_error_partition_cuda(
 
     sample_error = np.max(np.absolute(poly_results[:, 0] - nn_results[:, 0]))
     error = sample_error + lips * LA.norm(partition_box)
-    print('bp to nn error: {}'.format(error))
+    # print('bp to nn error: {}'.format(error))
 
     return error
 

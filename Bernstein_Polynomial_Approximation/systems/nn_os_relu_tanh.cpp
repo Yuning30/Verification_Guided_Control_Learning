@@ -101,6 +101,8 @@ int main(int argc, char* argv[])
 	double seconds;
 	time(&start_timer);
 
+	string theta_1 = argv[2];
+	string theta_2 = argv[3];
 	// // perform 35 control steps
 	int step_num = std::stoi(argv[1]);
 	for (int iter = 0; iter < step_num; ++iter)
@@ -110,10 +112,10 @@ int main(int argc, char* argv[])
 
 		string strBox = "[" + box[0].toString() + "," + box[1].toString() + "]";
 
-		string strExpU = bernsteinPolyApproximation(module_name, function_name1, degree_bound, strBox.c_str(), activation, output_index, neural_network);
-		
-		double err = stod(bernsteinPolyApproximation(module_name, function_name2, degree_bound, strBox.c_str(), activation, output_index, neural_network));
-
+		// string strExpU = bernsteinPolyApproximation(module_name, function_name1, degree_bound, strBox.c_str(), activation, output_index, neural_network);
+		string strExpU = "x0*" + theta_1 + "x1*" + theta_2;
+		// double err = stod(bernsteinPolyApproximation(module_name, function_name2, degree_bound, strBox.c_str(), activation, output_index, neural_network));
+		double err = 0;
 		if (err >= err_max)
 		{
 			err_max = err;

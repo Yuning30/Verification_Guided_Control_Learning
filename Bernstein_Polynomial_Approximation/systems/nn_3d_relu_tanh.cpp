@@ -106,7 +106,9 @@ int main(int argc, char* argv[])
 	time(&start_timer);
 
 	std::vector<double> StepReach;
-
+	string theta_0 = argv[3];
+	string theta_1 = argv[4];
+	string theta_2 = argv[5];
 	// // perform 35 control steps
 	for (int iter = 0; iter < steps; ++iter)
 	{
@@ -115,9 +117,11 @@ int main(int argc, char* argv[])
 
 		string strBox = "[" + box[0].toString() + "," + box[1].toString() + "," + box[2].toString() + "]";
 
-		string strExpU = bernsteinPolyApproximation(module_name, function_name1, degree_bound, strBox.c_str(), activation, output_index, neural_network);
+		// string strExpU = bernsteinPolyApproximation(module_name, function_name1, degree_bound, strBox.c_str(), activation, output_index, neural_network);
+		string strExpU = "x0*" + theta_0 + "+x1*" + theta_1 + "+x2*" + theta_2; 
 		
-		double err = stod(bernsteinPolyApproximation(module_name, function_name2, degree_bound, strBox.c_str(), activation, output_index, neural_network));
+		// double err = stod(bernsteinPolyApproximation(module_name, function_name2, degree_bound, strBox.c_str(), activation, output_index, neural_network));
+		double err = 0
 
 		if (err >= err_max)
 		{

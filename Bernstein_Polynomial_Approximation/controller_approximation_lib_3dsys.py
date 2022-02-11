@@ -128,7 +128,7 @@ def W_distance(reachset, targetset, printC):
             print('ohh, intersect and W distance is: ', l1.item())
     else:
         if printC:
-            print('not intersect and W distance is： ', l1.item())   
+            print('not intersect and W distance is: ', l1.item())   
     return l1.item()
 
 
@@ -182,7 +182,8 @@ def gradient(it, control_param, goalset, unsafeset, metric):
     goalgrad = np.zeros(len(control_param), )
     safetygrad = np.zeros(len(control_param), )
     delta = np.random.uniform(low=-0.05, high=0.05, size=(control_param.size))
-    index_list = [4,5,6, 8,9,10, 12,13,14, 16,17,18]
+    index_list = [0, 1, 2]
+    # index_list = [4,5,6, 8,9,10, 12,13,14, 16,17,18]
 
     for index in index_list:
         if index <= 18:
@@ -191,8 +192,9 @@ def gradient(it, control_param, goalset, unsafeset, metric):
             printC = False 
         pert = np.zeros(len(control_param), )
         pert[index] += delta[index]
-        np.save('param.npy', control_param+pert)
-        os.system('./nn_3d_relu_tanh 0.01 11')
+        # np.save('param.npy', control_param+pert)
+        cmd = f"./nn_3d_relu_tanh 0.01 11 %s %s %s" % (control_param[0], control_param[1], control_param[2])
+        os.system(cmd)
         reachset = np.load('StepReach.npy')
         reachset = np.reshape(reachset, (-1, 6))
 
@@ -202,6 +204,7 @@ def gradient(it, control_param, goalset, unsafeset, metric):
             unsafe = unsafe or intersect(reachset[i, :], unsafeset)
     
         if goalreached and not unsafe:
+            print("safe gauranteed!!!")
             np.save('./valid/nn_'+str(it)+'_relu_tanh.npy', control_param+pert)
             # savedata()
             assert False
@@ -209,8 +212,9 @@ def gradient(it, control_param, goalset, unsafeset, metric):
         g1 = metric(reachset[-1, :], goalset, printC)
         s1 = metric(reachset[4, :], unsafeset, printC)
 
-        np.save('param.npy', control_param-pert)
-        os.system('./nn_3d_relu_tanh 0.01 11')
+        # np.save('param.npy', control_param-pert)
+        cmd = f"./nn_3d_relu_tanh 0.01 11 %s %s %s" % (control_param[0], control_param[1], control_param[2])
+        os.system(cmd)
         reachset = np.load('StepReach.npy')
         reachset = np.reshape(reachset, (-1, 6))
 
@@ -220,6 +224,7 @@ def gradient(it, control_param, goalset, unsafeset, metric):
             unsafe = unsafe or intersect(reachset[i, :], unsafeset)
         
         if goalreached and not unsafe:
+            print("safe gauranteed!!!")
             np.save('./valid/nn_'+str(it)+'_relu_tanh.npy', control_param-pert)
             # savedata()
             assert False
@@ -247,7 +252,9 @@ if __name__ == '__main__':
 
     timelist = []
 
-    control_param = get_params()
+    # control_param = get_params()
+    # theta_0, theta_1, theta_2
+    control_param = [0.5, 0.5, 0.5]
 
     for it in range(60):
         print('------ Here begins ' + str(it) + ' iterations ------')

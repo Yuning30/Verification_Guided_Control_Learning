@@ -177,6 +177,7 @@ def gradient(cmd, theta, goalset, step, measure, goal_run=True):
         stdout=subprocess.PIPE).stdout.decode('utf-8')
     x = x.split("\n")
     x = [float(x[i]) for i in range(len(x)-1)]
+    print("x", x)
     reachset1 = set(x)
 
     x = subprocess.run([cmd, str(theta[0]-delta[0]), str(theta[1]), str(step)], 
@@ -198,7 +199,7 @@ def gradient(cmd, theta, goalset, step, measure, goal_run=True):
     reachset4 = set(x)
 
     if goal_run:
-        x = subprocess.run([cmd, str(theta[0]), str(theta[1]), str(75)], 
+        x = subprocess.run([cmd, str(theta[0]), str(theta[1]), str(15)], 
         stdout=subprocess.PIPE).stdout.decode('utf-8')
     else:
         x = subprocess.run([cmd, str(theta[0]), str(theta[1]), str(5)], 
@@ -215,7 +216,7 @@ def gradient(cmd, theta, goalset, step, measure, goal_run=True):
     m4, _ = measure(reachset4, goalset)
     gradient.append(0.5*(m3-m4)/delta[1])
 
-    m5, inter = measure(reachset5, goalset, printC=True)
+    m5, inter = measure(reachset5, goalset)
     gradient.append((reachset1.area-reachset2.area)/delta[0])
     gradient.append((reachset3.area-reachset4.area)/delta[1])
 
@@ -280,7 +281,7 @@ def run_heuristic():
     goalset = set([-0.05, -0.05, 0.05, 0.05])
     unsafeset = set([-0.3, 0.2, -0.25, 0.35])
 
-    cmd = './nn_acc_relu_tanh'
+    cmd = './nn_os_relu_tanh'
 
     lr = 0.0005
     indi = 10000
@@ -303,8 +304,8 @@ def run_heuristic():
                 lr = 0.0001 
             state_list.append(state)
             theta_list.append(theta)
-            goal_gra, criterion, _ = gradient(cmd, theta, goalset=goalset, step=50, measure=metric)
-            safe_gra, safe_distace, inter = gradient(cmd, theta=theta, goalset=unsafeset, step=6, goal_run=False, measure=metric)
+            goal_gra, criterion, _ = gradient(cmd, theta, goalset=goalset, step=10, measure=metric)
+            safe_gra, safe_distace, inter = gradient(cmd, theta=theta, goalset=unsafeset, step=3, goal_run=False, measure=metric)
             
             goal_dis.append(criterion)
             safe_dis.append(safe_distace)
